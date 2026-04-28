@@ -1,111 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Karthik AI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karthik AI Ultra</title>
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-  <!-- Marked.js -->
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+:root{
+  --glass: rgba(255,255,255,0.1);
+  --border: rgba(255,255,255,0.2);
+}
 
-  <style>
-    html, body {
-      height: 100%;
-    }
-    pre {
-      background: #111;
-      color: #0f0;
-      padding: 10px;
-      border-radius: 8px;
-      overflow-x: auto;
-    }
-  </style>
+/* Glass UI */
+.glass{
+  backdrop-filter: blur(20px);
+  background: var(--glass);
+  border: 1px solid var(--border);
+}
+
+/* Smooth motion */
+*{
+  transition: all 0.25s ease;
+}
+
+/* Touch feedback */
+.tap:active{
+  transform: scale(0.95);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%{transform: translateY(0px);}
+  50%{transform: translateY(-5px);}
+  100%{transform: translateY(0px);}
+}
+
+.float{
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Scroll */
+::-webkit-scrollbar{
+  width:6px;
+}
+::-webkit-scrollbar-thumb{
+  background:#888;
+  border-radius:10px;
+}
+</style>
 </head>
-<body class="bg-gray-100 text-black dark:bg-gray-900 dark:text-white">
+
+<body class="bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white">
 
 <div id="loading" class="fixed inset-0 flex items-center justify-center text-xl">
-  Loading App...
+Loading Karthik AI...
 </div>
 
-<div id="app" class="hidden min-h-screen flex">
+<div id="app" class="hidden min-h-screen flex overflow-hidden">
 
-  <!-- Sidebar -->
-  <div id="sidebar" class="fixed md:relative z-20 w-64 bg-white dark:bg-gray-800 border-r transform -translate-x-full md:translate-x-0 transition-transform duration-300 flex flex-col">
-    <div class="p-4 flex justify-between items-center">
-      <h2 class="font-bold text-lg">Karthik AI</h2>
-      <button id="closeSidebar" class="md:hidden">✖</button>
-    </div>
+<!-- Sidebar -->
+<div id="sidebar" class="fixed md:relative z-30 w-72 h-full glass transform -translate-x-full md:translate-x-0 transition duration-300 flex flex-col">
 
-    <button id="newChat" class="m-2 p-2 bg-blue-500 text-white rounded">+ New Chat</button>
+<div class="p-4 text-xl font-bold">Karthik AI</div>
 
-    <div id="chatList" class="flex-1 overflow-y-auto"></div>
+<button id="newChat" class="m-3 p-3 rounded-xl bg-gradient-to-r from-purple-500 to-blue-500 tap">
++ New Chat
+</button>
 
-    <div class="p-2 border-t space-y-2">
-      <button id="settingsBtn" class="w-full bg-gray-200 dark:bg-gray-700 p-2 rounded">Settings</button>
-      <button id="toggleTheme" class="w-full bg-gray-200 dark:bg-gray-700 p-2 rounded">Toggle Theme</button>
-    </div>
-  </div>
+<div id="chatList" class="flex-1 overflow-y-auto px-2"></div>
 
-  <!-- Main -->
-  <div class="flex-1 flex flex-col min-h-screen">
-
-    <!-- Top Bar -->
-    <div class="p-3 flex items-center border-b bg-white dark:bg-gray-800">
-      <button id="openSidebar" class="md:hidden mr-2">☰</button>
-      <h1 class="font-semibold">Karthik AI</h1>
-    </div>
-
-    <!-- Messages -->
-    <div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
-
-    <!-- Input -->
-    <div class="sticky bottom-0 bg-white dark:bg-gray-800 p-3 border-t">
-      <div class="flex gap-2">
-        <input id="input" class="flex-1 p-2 border rounded dark:bg-gray-700" placeholder="Ask something..." />
-        <button id="send" class="bg-blue-500 text-white px-4 rounded">Send</button>
-      </div>
-    </div>
-
-  </div>
+<div class="p-3 space-y-2">
+<button id="settingsBtn" class="w-full p-2 glass rounded-xl tap">Settings</button>
+<button id="toggleTheme" class="w-full p-2 glass rounded-xl tap">Toggle Theme</button>
 </div>
 
-<!-- Settings Modal -->
-<div id="settingsModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-  <div class="bg-white dark:bg-gray-800 p-4 rounded w-80 space-y-3">
-    <h2 class="font-bold">Settings</h2>
+</div>
 
-    <input id="apiKey" type="password" placeholder="OpenRouter API Key" class="w-full p-2 border rounded" />
-    <input id="model" placeholder="Model" class="w-full p-2 border rounded" />
+<!-- Overlay -->
+<div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden"></div>
 
-    <textarea id="systemPrompt" placeholder="System Prompt" class="w-full p-2 border rounded"></textarea>
+<!-- Main -->
+<div class="flex-1 flex flex-col">
 
-    <button id="saveSettings" class="w-full bg-blue-500 text-white p-2 rounded">Save</button>
-  </div>
+<!-- Top -->
+<div class="p-4 flex items-center justify-between glass">
+<button id="openSidebar" class="tap">☰</button>
+<div class="font-semibold">Karthik AI Ultra</div>
+</div>
+
+<!-- Messages -->
+<div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+
+<!-- Input -->
+<div class="p-4">
+<div class="glass rounded-full flex items-center px-4 py-2 shadow-lg">
+
+<input id="input" class="flex-1 bg-transparent outline-none p-2" placeholder="Ask anything..." />
+
+<button id="send" class="bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 rounded-full tap">
+➤
+</button>
+
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Settings -->
+<div id="settingsModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+
+<div class="glass p-6 rounded-2xl w-80 space-y-3">
+
+<h2 class="text-lg font-bold">Settings</h2>
+
+<input id="apiKey" type="password" placeholder="API Key" class="w-full p-2 rounded bg-black bg-opacity-30" />
+<input id="model" placeholder="Model" class="w-full p-2 rounded bg-black bg-opacity-30" />
+<textarea id="systemPrompt" placeholder="System Prompt" class="w-full p-2 rounded bg-black bg-opacity-30"></textarea>
+
+<button id="saveSettings" class="w-full bg-blue-500 p-2 rounded-xl tap">Save</button>
+
+</div>
 </div>
 
 <script>
 (function(){
 
-const $ = id => document.getElementById(id);
+const $ = id=>document.getElementById(id);
 
-// Init
-let chats = JSON.parse(localStorage.getItem("chats") || "[]");
-let currentChatId = localStorage.getItem("currentChatId") || null;
+let chats = JSON.parse(localStorage.getItem("chats")||"[]");
+let currentChatId = localStorage.getItem("currentChatId");
 
-if (!chats.length) {
-  createNewChat();
+if(!chats.length) createChat();
+
+function createChat(){
+const id=Date.now()+"";
+chats.unshift({id,title:"New Chat",messages:[],systemPrompt:""});
+currentChatId=id;
+save();
+renderChats();
+loadChat();
 }
 
+function save(){
+localStorage.setItem("chats",JSON.stringify(chats));
+localStorage.setItem("currentChatId",currentChatId);
+}
+
+function getChat(){
+return chats.find(c=>c.id===currentChatId);
+}
+
+function renderChats(){
+$("chatList").innerHTML="";
+chats.forEach(c=>{
+const d=document.createElement("div");
+d.className="p-3 glass rounded-xl mb-2 tap cursor-pointer";
+d.innerText=c.title;
+d.onclick=()=>{currentChatId=c.id;save();loadChat();}
+$("chatList").appendChild(d);
+});
+}
+
+function loadChat(){
+$("messages").innerHTML="";
+const chat=getChat();
+if(!chat) return;
+chat.messages.forEach(m=>renderMsg(m));
+}
+
+function renderMsg(m){
+const div=document.createElement("div");
+div.className=m.role==="user"?"text-right":"text-left float";
+
+div.innerHTML=`
+<div class="inline-block max-w-[80%] p-3 rounded-2xl glass">
+${marked.parse(m.content)}
+</div>
+`;
+
+$("messages").appendChild(div);
+$("messages").scrollTop=999999;
+}
+
+$("send").onclick=send;
+$("input").addEventListener("keypress",e=>{if(e.key==="Enter")send();});
+
+async function send(){
+const text=$("input").value.trim();
+if(!text) return;
+
+const chat=getChat();
+
+chat.messages.push({role:"user",content:text});
+renderMsg({role:"user",content:text});
+
+$("input").value="";
+
+const ai={role:"assistant",content:""};
+chat.messages.push(ai);
+
+const div=document.createElement("div");
+div.className="text-left float";
+const bubble=document.createElement("div");
+bubble.className="inline-block p-3 rounded-2xl glass";
+div.appendChild(bubble);
+$("messages").appendChild(div);
+
+try{
+const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
+method:"POST",
+headers:{
+"Authorization":"Bearer "+(localStorage.getItem("apiKey")||""),
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+model:localStorage.getItem("model")||"deepseek/deepseek-r1:free",
+messages:chat.messages,
+stream:true
+})
+});
+
+const reader=res.body.getReader();
+const decoder=new TextDecoder();
+
+while(true){
+const {done,value}=await reader.read();
+if(done) break;
+
+const chunk=decoder.decode(value);
+chunk.split("\n").forEach(line=>{
+if(line.startsWith("data:")){
+const d=line.replace("data:","").trim();
+if(d==="[DONE]") return;
+try{
+const j=JSON.parse(d);
+const t=j.choices?.[0]?.delta?.content||"";
+ai.content+=t;
+bubble.innerHTML=marked.parse(ai.content);
+$("messages").scrollTop=999999;
+}catch{}
+}
+});
+}
+
+}catch(e){
+bubble.innerText="Error";
+}
+
+save();
+}
+
+$("newChat").onclick=createChat;
+
+// Sidebar
+$("openSidebar").onclick=()=>{
+$("sidebar").classList.remove("-translate-x-full");
+$("overlay").classList.remove("hidden");
+};
+$("overlay").onclick=()=>{
+$("sidebar").classList.add("-translate-x-full");
+$("overlay").classList.add("hidden");
+};
+
+// Settings
+$("settingsBtn").onclick=()=>{
+$("settingsModal").classList.remove("hidden");
+$("apiKey").value=localStorage.getItem("apiKey")||"";
+$("model").value=localStorage.getItem("model")||"";
+$("systemPrompt").value=getChat().systemPrompt||"";
+};
+
+$("saveSettings").onclick=()=>{
+localStorage.setItem("apiKey",$("apiKey").value);
+localStorage.setItem("model",$("model").value);
+getChat().systemPrompt=$("systemPrompt").value;
+$("settingsModal").classList.add("hidden");
+save();
+};
+
+// Init
 renderChats();
 loadChat();
 
-// Theme
-if (localStorage.getItem("theme") === "dark") {
-  document.documentElement.classList.add("dark");
-}
+$("loading").style.display="none";
+$("app").classList.remove("hidden");
+
+})();
+</script>
+
+</body>
+</html>}
 
 // Sidebar toggle
 $("openSidebar").onclick = () => $("sidebar").classList.remove("-translate-x-full");
