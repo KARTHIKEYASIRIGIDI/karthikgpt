@@ -20,14 +20,10 @@
 body {
   font-family: 'Outfit', sans-serif;
   background: var(--bg-dark);
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 126, 185, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(122, 252, 255, 0.1) 0%, transparent 40%);
 }
 
 .anime-font { font-family: 'Fredoka One', cursive; }
 
-/* Anime Border Style */
 .anime-card {
   border: 4px solid var(--manga-border);
   box-shadow: 6px 6px 0px var(--manga-border);
@@ -42,7 +38,6 @@ body {
   border-radius: 20px;
 }
 
-/* Character Speech Bubbles */
 .bubble-user {
   background: #ff7eb9;
   color: white;
@@ -59,75 +54,67 @@ body {
   border-radius: 20px 20px 20px 0;
 }
 
-/* Floating animation for avatar */
 @keyframes bop {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-5px); }
 }
 .bop { animation: bop 3s ease-in-out infinite; }
 
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; border: 2px solid black; }
 </style>
 </head>
 
 <body class="text-white overflow-hidden">
 
-<div id="loading" class="fixed inset-0 flex items-center justify-center anime-font text-3xl text-pink-400">
-  <div class="bop">LOADING... DESU~</div>
+<div id="loading" class="fixed inset-0 flex items-center justify-center anime-font text-3xl text-pink-400 z-50 bg-[#1a1a2e]">
+  <div class="bop">LOADING...</div>
 </div>
+
+<div id="overlay" class="fixed inset-0 bg-black/60 z-20 hidden"></div>
 
 <div id="app" class="hidden h-screen flex flex-col md:flex-row p-4 gap-4">
 
-  <div id="sidebar" class="fixed md:relative z-30 w-72 h-full glass-anime transform -translate-x-[110%] md:translate-x-0 transition duration-300 flex flex-col p-4">
+  <div id="sidebar" class="fixed md:relative z-30 w-72 h-[calc(100vh-2rem)] glass-anime transform -translate-x-[110%] md:translate-x-0 transition duration-300 flex flex-col p-4">
     <div class="text-2xl anime-font text-pink-400 mb-6 text-center">Karthik AI</div>
-    
-    <button id="newChat" class="anime-card p-3 mb-6 hover:translate-y-1 hover:shadow-none transition-all anime-font">
-      + NEW ADVENTURE
+    <button id="newChat" class="anime-card p-3 mb-6 hover:translate-y-1 hover:shadow-none transition-all anime-font active:scale-95">
+      + NEW CHAT
     </button>
-
     <div id="chatList" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-
     <div class="mt-4 space-y-2">
-      <button id="settingsBtn" class="w-full p-2 glass-anime hover:bg-white hover:text-black transition-colors">Settings</button>
-      <button id="toggleTheme" class="w-full p-2 glass-anime hover:bg-white hover:text-black transition-colors">Dark/Light</button>
+      <button id="settingsBtn" class="w-full p-2 glass-anime hover:bg-white hover:text-black transition-colors active:scale-95">Settings</button>
     </div>
   </div>
 
   <div class="flex-1 flex flex-col glass-anime overflow-hidden relative">
-    
-    <div class="p-4 border-b border-white/10 flex items-center justify-between">
-      <button id="openSidebar" class="md:hidden text-2xl">☰</button>
+    <div class="p-4 border-b border-white/10 flex items-center justify-between bg-black/20">
+      <button id="openSidebar" class="md:hidden text-2xl p-2">☰</button>
       <div class="anime-font text-xl tracking-widest uppercase">System Core</div>
       <div class="h-8 w-8 rounded-full bg-pink-500 border-2 border-black bop"></div>
     </div>
 
-    <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-8">
-      <div class="text-center opacity-50 text-sm italic">Connection established... Start your story.</div>
-    </div>
+    <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-8"></div>
 
     <div class="p-4 bg-black/20">
-      <div class="flex gap-2 items-center bg-white rounded-2xl p-1 border-4 border-black shadow-[4px_4px_0px_black]">
-        <input id="input" class="flex-1 bg-transparent outline-none p-3 text-black font-medium" placeholder="Type your message..." />
-        <button id="send" class="bg-pink-500 text-white p-3 rounded-xl hover:bg-pink-600 transition-colors">
-          <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      <div class="flex gap-2 items-center bg-white rounded-2xl p-2 border-4 border-black shadow-[4px_4px_0px_black]">
+        <input id="input" type="text" class="flex-1 bg-white outline-none p-2 text-black font-bold placeholder-gray-400" placeholder="Type your mission here..." />
+        <button id="send" class="bg-pink-500 text-white px-4 py-2 rounded-xl border-2 border-black hover:bg-pink-600 active:scale-90 transition-all font-bold">
+          SEND
         </button>
       </div>
     </div>
-
   </div>
 </div>
 
 <div id="settingsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-  <div class="anime-card p-8 w-96 space-y-4">
-    <h2 class="anime-font text-2xl mb-4">Configurations</h2>
-    <input id="apiKey" type="password" placeholder="OpenRouter API Key" class="w-full p-3 border-2 border-black rounded-lg" />
-    <input id="model" placeholder="Model (e.g. deepseek/deepseek-r1:free)" class="w-full p-3 border-2 border-black rounded-lg" />
-    <textarea id="systemPrompt" placeholder="Custom Instructions..." class="w-full p-3 border-2 border-black rounded-lg h-32"></textarea>
+  <div class="anime-card p-8 w-80 md:w-96 space-y-4">
+    <h2 class="anime-font text-2xl mb-4 text-pink-500 text-center">Settings</h2>
+    <input id="apiKey" type="password" placeholder="API Key" class="w-full p-3 border-2 border-black rounded-lg text-black bg-gray-50" />
+    <input id="model" placeholder="Model" class="w-full p-3 border-2 border-black rounded-lg text-black bg-gray-50" />
+    <textarea id="systemPrompt" placeholder="System Prompt" class="w-full p-3 border-2 border-black rounded-lg text-black h-24 bg-gray-50"></textarea>
     <div class="flex gap-2">
-      <button id="saveSettings" class="flex-1 bg-cyan-400 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold">SAVE</button>
-      <button onclick="document.getElementById('settingsModal').classList.add('hidden')" class="flex-1 bg-gray-200 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold">CLOSE</button>
+      <button id="saveSettings" class="flex-1 bg-cyan-400 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold active:translate-y-1">SAVE</button>
+      <button id="closeSettings" class="flex-1 bg-gray-200 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold text-black active:translate-y-1">CLOSE</button>
     </div>
   </div>
 </div>
@@ -138,23 +125,6 @@ const $ = id => document.getElementById(id);
 let chats = JSON.parse(localStorage.getItem("chats") || "[]");
 let currentChatId = localStorage.getItem("currentChatId");
 
-function init() {
-  if (!chats.length) createChat();
-  renderChats();
-  loadChat();
-  $("loading").style.display = "none";
-  $("app").classList.remove("hidden");
-}
-
-function createChat() {
-  const id = Date.now().toString();
-  chats.unshift({ id, title: "New Chat", messages: [], systemPrompt: "" });
-  currentChatId = id;
-  save();
-  renderChats();
-  loadChat();
-}
-
 function save() {
   localStorage.setItem("chats", JSON.stringify(chats));
   localStorage.setItem("currentChatId", currentChatId);
@@ -164,702 +134,66 @@ function getChat() {
   return chats.find(c => c.id === currentChatId) || chats[0];
 }
 
-function renderChats() {
-  $("chatList").innerHTML = "";
-  chats.forEach(c => {
-    const d = document.createElement("div");
-    d.className = `p-3 mb-2 rounded-xl border-2 cursor-pointer transition-all ${c.id === currentChatId ? 'bg-pink-500 border-black text-white' : 'border-white/20 hover:bg-white/10'}`;
-    d.innerText = c.title;
-    d.onclick = () => { currentChatId = c.id; save(); renderChats(); loadChat(); };
-    $("chatList").appendChild(d);
-  });
-}
-
-function loadChat() {
-  $("messages").innerHTML = "";
-  const chat = getChat();
-  if (chat) chat.messages.forEach(m => renderMsg(m));
-}
-
-function renderMsg(m) {
-  const isUser = m.role === "user";
-  const container = document.createElement("div");
-  container.className = `flex ${isUser ? 'justify-end' : 'justify-start'} w-full`;
-  
-  const inner = document.createElement("div");
-  inner.className = `max-w-[85%] p-4 ${isUser ? 'bubble-user' : 'bubble-ai'} prose prose-invert`;
-  inner.innerHTML = marked.parse(m.content);
-  
-  container.appendChild(inner);
-  $("messages").appendChild(container);
-  $("messages").scrollTop = $("messages").scrollHeight;
-}
-
-async function send() {
-  const text = $("input").value.trim();
-  if (!text) return;
-
-  const chat = getChat();
-  chat.messages.push({ role: "user", content: text });
-  renderMsg({ role: "user", content: text });
-  $("input").value = "";
-
-  if (chat.messages.length === 1) chat.title = text.substring(0, 20);
-
-  const aiMsg = { role: "assistant", content: "" };
-  chat.messages.push(aiMsg);
-  
-  const container = document.createElement("div");
-  container.className = "flex justify-start w-full";
-  const bubble = document.createElement("div");
-  bubble.className = "max-w-[85%] p-4 bubble-ai bop";
-  container.appendChild(bubble);
-  $("messages").appendChild(container);
-
-  try {
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + (localStorage.getItem("apiKey") || ""),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: localStorage.getItem("model") || "deepseek/deepseek-r1:free",
-        messages: chat.messages,
-        stream: true
-      })
-    });
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const lines = decoder.decode(value).split("\n");
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.slice(6);
-          if (data === "[DONE]") continue;
-          try {
-            const json = JSON.parse(data);
-            const content = json.choices[0].delta.content || "";
-            aiMsg.content += content;
-            bubble.innerHTML = marked.parse(aiMsg.content);
-            $("messages").scrollTop = $("messages").scrollHeight;
-          } catch (e) {}
-        }
-      }
-    }
-  } catch (e) { bubble.innerText = "Connection lost... Gomen!"; }
-  save();
-}
-
-$("send").onclick = send;
-$("input").onkeypress = e => { if (e.key === "Enter") send(); };
-$("newChat").onclick = createChat;
-$("settingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
-$("saveSettings").onclick = () => {
-  localStorage.setItem("apiKey", $("apiKey").value);
-  localStorage.setItem("model", $("model").value);
-  getChat().systemPrompt = $("systemPrompt").value;
-  $("settingsModal").classList.add("hidden");
-  save();
-};
-
-init();
-})();
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Karthik AI Ultra - Anime Edition</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --primary: #ff7eb9;
-  --secondary: #7afcff;
-  --bg-dark: #1a1a2e;
-  --manga-border: #000;
-}
-
-body {
-  font-family: 'Outfit', sans-serif;
-  background: var(--bg-dark);
-  background-image: 
-    radial-gradient(circle at 20% 30%, rgba(255, 126, 185, 0.15) 0%, transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(122, 252, 255, 0.1) 0%, transparent 40%);
-}
-
-.anime-font { font-family: 'Fredoka One', cursive; }
-
-/* Anime Border Style */
-.anime-card {
-  border: 4px solid var(--manga-border);
-  box-shadow: 6px 6px 0px var(--manga-border);
-  background: white;
-  color: black;
-}
-
-.glass-anime {
-  backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-}
-
-/* Character Speech Bubbles */
-.bubble-user {
-  background: #ff7eb9;
-  color: white;
-  border: 3px solid black;
-  box-shadow: 4px 4px 0px black;
-  border-radius: 20px 20px 0 20px;
-}
-
-.bubble-ai {
-  background: white;
-  color: black;
-  border: 3px solid black;
-  box-shadow: 4px 4px 0px black;
-  border-radius: 20px 20px 20px 0;
-}
-
-/* Floating animation for avatar */
-@keyframes bop {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-.bop { animation: bop 3s ease-in-out infinite; }
-
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; border: 2px solid black; }
-</style>
-</head>
-
-<body class="text-white overflow-hidden">
-
-<div id="loading" class="fixed inset-0 flex items-center justify-center anime-font text-3xl text-pink-400">
-  <div class="bop">LOADING... DESU~</div>
-</div>
-
-<div id="app" class="hidden h-screen flex flex-col md:flex-row p-4 gap-4">
-
-  <div id="sidebar" class="fixed md:relative z-30 w-72 h-full glass-anime transform -translate-x-[110%] md:translate-x-0 transition duration-300 flex flex-col p-4">
-    <div class="text-2xl anime-font text-pink-400 mb-6 text-center">Karthik AI</div>
-    
-    <button id="newChat" class="anime-card p-3 mb-6 hover:translate-y-1 hover:shadow-none transition-all anime-font">
-      + NEW ADVENTURE
-    </button>
-
-    <div id="chatList" class="flex-1 overflow-y-auto space-y-3 pr-2"></div>
-
-    <div class="mt-4 space-y-2">
-      <button id="settingsBtn" class="w-full p-2 glass-anime hover:bg-white hover:text-black transition-colors">Settings</button>
-      <button id="toggleTheme" class="w-full p-2 glass-anime hover:bg-white hover:text-black transition-colors">Dark/Light</button>
-    </div>
-  </div>
-
-  <div class="flex-1 flex flex-col glass-anime overflow-hidden relative">
-    
-    <div class="p-4 border-b border-white/10 flex items-center justify-between">
-      <button id="openSidebar" class="md:hidden text-2xl">☰</button>
-      <div class="anime-font text-xl tracking-widest uppercase">System Core</div>
-      <div class="h-8 w-8 rounded-full bg-pink-500 border-2 border-black bop"></div>
-    </div>
-
-    <div id="messages" class="flex-1 overflow-y-auto p-6 space-y-8">
-      <div class="text-center opacity-50 text-sm italic">Connection established... Start your story.</div>
-    </div>
-
-    <div class="p-4 bg-black/20">
-      <div class="flex gap-2 items-center bg-white rounded-2xl p-1 border-4 border-black shadow-[4px_4px_0px_black]">
-        <input id="input" class="flex-1 bg-transparent outline-none p-3 text-black font-medium" placeholder="Type your message..." />
-        <button id="send" class="bg-pink-500 text-white p-3 rounded-xl hover:bg-pink-600 transition-colors">
-          <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<div id="settingsModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-  <div class="anime-card p-8 w-96 space-y-4">
-    <h2 class="anime-font text-2xl mb-4">Configurations</h2>
-    <input id="apiKey" type="password" placeholder="OpenRouter API Key" class="w-full p-3 border-2 border-black rounded-lg" />
-    <input id="model" placeholder="Model (e.g. deepseek/deepseek-r1:free)" class="w-full p-3 border-2 border-black rounded-lg" />
-    <textarea id="systemPrompt" placeholder="Custom Instructions..." class="w-full p-3 border-2 border-black rounded-lg h-32"></textarea>
-    <div class="flex gap-2">
-      <button id="saveSettings" class="flex-1 bg-cyan-400 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold">SAVE</button>
-      <button onclick="document.getElementById('settingsModal').classList.add('hidden')" class="flex-1 bg-gray-200 p-3 border-2 border-black shadow-[3px_3px_0_black] font-bold">CLOSE</button>
-    </div>
-  </div>
-</div>
-
-<script>
-(function(){
-const $ = id => document.getElementById(id);
-let chats = JSON.parse(localStorage.getItem("chats") || "[]");
-let currentChatId = localStorage.getItem("currentChatId");
-
-function init() {
-  if (!chats.length) createChat();
-  renderChats();
-  loadChat();
-  $("loading").style.display = "none";
-  $("app").classList.remove("hidden");
-}
-
 function createChat() {
   const id = Date.now().toString();
-  chats.unshift({ id, title: "New Chat", messages: [], systemPrompt: "" });
+  chats.unshift({ id, title: "New Adventure", messages: [], systemPrompt: "" });
   currentChatId = id;
   save();
   renderChats();
   loadChat();
-}
-
-function save() {
-  localStorage.setItem("chats", JSON.stringify(chats));
-  localStorage.setItem("currentChatId", currentChatId);
-}
-
-function getChat() {
-  return chats.find(c => c.id === currentChatId) || chats[0];
 }
 
 function renderChats() {
   $("chatList").innerHTML = "";
   chats.forEach(c => {
     const d = document.createElement("div");
-    d.className = `p-3 mb-2 rounded-xl border-2 cursor-pointer transition-all ${c.id === currentChatId ? 'bg-pink-500 border-black text-white' : 'border-white/20 hover:bg-white/10'}`;
+    d.className = `p-3 mb-2 rounded-xl border-2 cursor-pointer transition-all ${c.id === currentChatId ? 'bg-pink-500 border-black text-white shadow-[3px_3px_0_black]' : 'border-white/20 hover:bg-white/10'}`;
     d.innerText = c.title;
-    d.onclick = () => { currentChatId = c.id; save(); renderChats(); loadChat(); };
-    $("chatList").appendChild(d);
-  });
-}
-
-function loadChat() {
-  $("messages").innerHTML = "";
-  const chat = getChat();
-  if (chat) chat.messages.forEach(m => renderMsg(m));
-}
-
-function renderMsg(m) {
-  const isUser = m.role === "user";
-  const container = document.createElement("div");
-  container.className = `flex ${isUser ? 'justify-end' : 'justify-start'} w-full`;
-  
-  const inner = document.createElement("div");
-  inner.className = `max-w-[85%] p-4 ${isUser ? 'bubble-user' : 'bubble-ai'} prose prose-invert`;
-  inner.innerHTML = marked.parse(m.content);
-  
-  container.appendChild(inner);
-  $("messages").appendChild(container);
-  $("messages").scrollTop = $("messages").scrollHeight;
-}
-
-async function send() {
-  const text = $("input").value.trim();
-  if (!text) return;
-
-  const chat = getChat();
-  chat.messages.push({ role: "user", content: text });
-  renderMsg({ role: "user", content: text });
-  $("input").value = "";
-
-  if (chat.messages.length === 1) chat.title = text.substring(0, 20);
-
-  const aiMsg = { role: "assistant", content: "" };
-  chat.messages.push(aiMsg);
-  
-  const container = document.createElement("div");
-  container.className = "flex justify-start w-full";
-  const bubble = document.createElement("div");
-  bubble.className = "max-w-[85%] p-4 bubble-ai bop";
-  container.appendChild(bubble);
-  $("messages").appendChild(container);
-
-  try {
-    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + (localStorage.getItem("apiKey") || ""),
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: localStorage.getItem("model") || "deepseek/deepseek-r1:free",
-        messages: chat.messages,
-        stream: true
-      })
-    });
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      const lines = decoder.decode(value).split("\n");
-      for (const line of lines) {
-        if (line.startsWith("data: ")) {
-          const data = line.slice(6);
-          if (data === "[DONE]") continue;
-          try {
-            const json = JSON.parse(data);
-            const content = json.choices[0].delta.content || "";
-            aiMsg.content += content;
-            bubble.innerHTML = marked.parse(aiMsg.content);
-            $("messages").scrollTop = $("messages").scrollHeight;
-          } catch (e) {}
-        }
-      }
-    }
-  } catch (e) { bubble.innerText = "Connection lost... Gomen!"; }
-  save();
-}
-
-$("send").onclick = send;
-$("input").onkeypress = e => { if (e.key === "Enter") send(); };
-$("newChat").onclick = createChat;
-$("settingsBtn").onclick = () => $("settingsModal").classList.remove("hidden");
-$("saveSettings").onclick = () => {
-  localStorage.setItem("apiKey", $("apiKey").value);
-  localStorage.setItem("model", $("model").value);
-  getChat().systemPrompt = $("systemPrompt").value;
-  $("settingsModal").classList.add("hidden");
-  save();
-};
-
-init();
-})();
-</script>
-</body>
-</html>
-</div>
-
-</div>
-</div>
-
-<!-- Settings -->
-<div id="settingsModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
-
-<div class="glass p-6 rounded-2xl w-80 space-y-3">
-
-<h2 class="text-lg font-bold">Settings</h2>
-
-<input id="apiKey" type="password" placeholder="API Key" class="w-full p-2 rounded bg-black bg-opacity-30" />
-<input id="model" placeholder="Model" class="w-full p-2 rounded bg-black bg-opacity-30" />
-<textarea id="systemPrompt" placeholder="System Prompt" class="w-full p-2 rounded bg-black bg-opacity-30"></textarea>
-
-<button id="saveSettings" class="w-full bg-blue-500 p-2 rounded-xl tap">Save</button>
-
-</div>
-</div>
-
-<script>
-(function(){
-
-const $ = id=>document.getElementById(id);
-
-let chats = JSON.parse(localStorage.getItem("chats")||"[]");
-let currentChatId = localStorage.getItem("currentChatId");
-
-if(!chats.length) createChat();
-
-function createChat(){
-const id=Date.now()+"";
-chats.unshift({id,title:"New Chat",messages:[],systemPrompt:""});
-currentChatId=id;
-save();
-renderChats();
-loadChat();
-}
-
-function save(){
-localStorage.setItem("chats",JSON.stringify(chats));
-localStorage.setItem("currentChatId",currentChatId);
-}
-
-function getChat(){
-return chats.find(c=>c.id===currentChatId);
-}
-
-function renderChats(){
-$("chatList").innerHTML="";
-chats.forEach(c=>{
-const d=document.createElement("div");
-d.className="p-3 glass rounded-xl mb-2 tap cursor-pointer";
-d.innerText=c.title;
-d.onclick=()=>{currentChatId=c.id;save();loadChat();}
-$("chatList").appendChild(d);
-});
-}
-
-function loadChat(){
-$("messages").innerHTML="";
-const chat=getChat();
-if(!chat) return;
-chat.messages.forEach(m=>renderMsg(m));
-}
-
-function renderMsg(m){
-const div=document.createElement("div");
-div.className=m.role==="user"?"text-right":"text-left float";
-
-div.innerHTML=`
-<div class="inline-block max-w-[80%] p-3 rounded-2xl glass">
-${marked.parse(m.content)}
-</div>
-`;
-
-$("messages").appendChild(div);
-$("messages").scrollTop=999999;
-}
-
-$("send").onclick=send;
-$("input").addEventListener("keypress",e=>{if(e.key==="Enter")send();});
-
-async function send(){
-const text=$("input").value.trim();
-if(!text) return;
-
-const chat=getChat();
-
-chat.messages.push({role:"user",content:text});
-renderMsg({role:"user",content:text});
-
-$("input").value="";
-
-const ai={role:"assistant",content:""};
-chat.messages.push(ai);
-
-const div=document.createElement("div");
-div.className="text-left float";
-const bubble=document.createElement("div");
-bubble.className="inline-block p-3 rounded-2xl glass";
-div.appendChild(bubble);
-$("messages").appendChild(div);
-
-try{
-const res=await fetch("https://openrouter.ai/api/v1/chat/completions",{
-method:"POST",
-headers:{
-"Authorization":"Bearer "+(localStorage.getItem("apiKey")||""),
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-model:localStorage.getItem("model")||"deepseek/deepseek-r1:free",
-messages:chat.messages,
-stream:true
-})
-});
-
-const reader=res.body.getReader();
-const decoder=new TextDecoder();
-
-while(true){
-const {done,value}=await reader.read();
-if(done) break;
-
-const chunk=decoder.decode(value);
-chunk.split("\n").forEach(line=>{
-if(line.startsWith("data:")){
-const d=line.replace("data:","").trim();
-if(d==="[DONE]") return;
-try{
-const j=JSON.parse(d);
-const t=j.choices?.[0]?.delta?.content||"";
-ai.content+=t;
-bubble.innerHTML=marked.parse(ai.content);
-$("messages").scrollTop=999999;
-}catch{}
-}
-});
-}
-
-}catch(e){
-bubble.innerText="Error";
-}
-
-save();
-}
-
-$("newChat").onclick=createChat;
-
-// Sidebar
-$("openSidebar").onclick=()=>{
-$("sidebar").classList.remove("-translate-x-full");
-$("overlay").classList.remove("hidden");
-};
-$("overlay").onclick=()=>{
-$("sidebar").classList.add("-translate-x-full");
-$("overlay").classList.add("hidden");
-};
-
-// Settings
-$("settingsBtn").onclick=()=>{
-$("settingsModal").classList.remove("hidden");
-$("apiKey").value=localStorage.getItem("apiKey")||"";
-$("model").value=localStorage.getItem("model")||"";
-$("systemPrompt").value=getChat().systemPrompt||"";
-};
-
-$("saveSettings").onclick=()=>{
-localStorage.setItem("apiKey",$("apiKey").value);
-localStorage.setItem("model",$("model").value);
-getChat().systemPrompt=$("systemPrompt").value;
-$("settingsModal").classList.add("hidden");
-save();
-};
-
-// Init
-renderChats();
-loadChat();
-
-$("loading").style.display="none";
-$("app").classList.remove("hidden");
-
-})();
-</script>
-
-</body>
-</html>}
-
-// Sidebar toggle
-$("openSidebar").onclick = () => $("sidebar").classList.remove("-translate-x-full");
-$("closeSidebar").onclick = () => $("sidebar").classList.add("-translate-x-full");
-
-// Theme toggle
-$("toggleTheme").onclick = () => {
-  document.documentElement.classList.toggle("dark");
-  localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
-};
-
-// Settings
-$("settingsBtn").onclick = () => {
-  $("settingsModal").classList.remove("hidden");
-  $("apiKey").value = localStorage.getItem("apiKey") || "";
-  $("model").value = localStorage.getItem("model") || "deepseek/deepseek-r1:free";
-  $("systemPrompt").value = getCurrentChat().systemPrompt || "";
-};
-
-$("saveSettings").onclick = () => {
-  localStorage.setItem("apiKey", $("apiKey").value);
-  localStorage.setItem("model", $("model").value);
-  getCurrentChat().systemPrompt = $("systemPrompt").value;
-  saveChats();
-  $("settingsModal").classList.add("hidden");
-};
-
-// New chat
-$("newChat").onclick = createNewChat;
-
-// Send
-$("send").onclick = sendMessage;
-$("input").addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
-});
-
-function createNewChat(){
-  const id = Date.now().toString();
-  chats.unshift({ id, title: "New Chat", messages: [], systemPrompt: "" });
-  currentChatId = id;
-  saveChats();
-  renderChats();
-  loadChat();
-}
-
-function getCurrentChat(){
-  return chats.find(c => c.id === currentChatId);
-}
-
-function renderChats(){
-  $("chatList").innerHTML = "";
-  chats.forEach(chat => {
-    const div = document.createElement("div");
-    div.className = "p-2 hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer flex justify-between";
-    div.innerHTML = `
-      <span>${chat.title}</span>
-      <span>
-        <button data-id="${chat.id}" class="rename">✏</button>
-        <button data-id="${chat.id}" class="delete">🗑</button>
-      </span>
-    `;
-    div.onclick = () => {
-      currentChatId = chat.id;
-      saveChats();
-      loadChat();
-    };
-    $("chatList").appendChild(div);
-  });
-
-  document.querySelectorAll(".delete").forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      chats = chats.filter(c => c.id !== btn.dataset.id);
-      saveChats();
+    d.onclick = () => {
+      currentChatId = c.id;
+      save();
       renderChats();
       loadChat();
     };
-  });
-
-  document.querySelectorAll(".rename").forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      const name = prompt("Rename chat:");
-      if (name) {
-        const c = chats.find(x => x.id === btn.dataset.id);
-        c.title = name;
-        saveChats();
-        renderChats();
-      }
-    };
+    $("chatList").appendChild(d);
   });
 }
 
-function loadChat(){
-  const chat = getCurrentChat();
-  if (!chat) return;
-  $("messages").innerHTML = "";
-  chat.messages.forEach(renderMessage);
-}
-
-function renderMessage(msg){
-  const div = document.createElement("div");
-  div.className = msg.role === "user" ? "text-right" : "text-left";
-  div.innerHTML = `<div class="inline-block p-2 rounded bg-gray-200 dark:bg-gray-700">${marked.parse(msg.content)}</div>`;
-  $("messages").appendChild(div);
+function renderMsg(m) {
+  const isUser = m.role === "user";
+  const container = document.createElement("div");
+  container.className = `flex ${isUser ? 'justify-end' : 'justify-start'} w-full mb-4`;
+  const inner = document.createElement("div");
+  inner.className = `max-w-[85%] p-4 ${isUser ? 'bubble-user' : 'bubble-ai'}`;
+  inner.innerHTML = marked.parse(m.content);
+  container.appendChild(inner);
+  $("messages").appendChild(container);
   $("messages").scrollTop = $("messages").scrollHeight;
 }
 
-async function sendMessage(){
-  const input = $("input");
-  const text = input.value.trim();
+function loadChat() {
+  $("messages").innerHTML = "";
+  const chat = getChat();
+  if (chat && chat.messages) chat.messages.forEach(m => renderMsg(m));
+}
+
+async function send() {
+  const text = $("input").value.trim();
   if (!text) return;
-
-  const chat = getCurrentChat();
-
+  
+  const chat = getChat();
   chat.messages.push({ role: "user", content: text });
-  renderMessage({ role: "user", content: text });
-
-  input.value = "";
+  renderMsg({ role: "user", content: text });
+  $("input").value = "";
+  
+  if (chat.title === "New Adventure") chat.title = text.substring(0, 20);
 
   const aiMsg = { role: "assistant", content: "" };
   chat.messages.push(aiMsg);
-
   const div = document.createElement("div");
-  div.className = "text-left";
+  div.className = "flex justify-start w-full mb-4";
   const bubble = document.createElement("div");
-  bubble.className = "inline-block p-2 rounded bg-gray-200 dark:bg-gray-700";
+  bubble.className = "max-w-[85%] p-4 bubble-ai";
   div.appendChild(bubble);
   $("messages").appendChild(div);
 
@@ -872,62 +206,71 @@ async function sendMessage(){
       },
       body: JSON.stringify({
         model: localStorage.getItem("model") || "deepseek/deepseek-r1:free",
-        messages: [
-          ...(chat.systemPrompt ? [{role:"system", content: chat.systemPrompt}] : []),
-          ...chat.messages
-        ],
+        messages: chat.messages,
         stream: true
       })
     });
-
     const reader = res.body.getReader();
-    const decoder = new TextDecoder("utf-8");
-
-    while(true){
-      const {done, value} = await reader.read();
-      if(done) break;
-
-      const chunk = decoder.decode(value);
-      const lines = chunk.split("\n");
-
-      for (let line of lines){
-        if(line.startsWith("data:")){
-          const data = line.replace("data:","").trim();
-          if(data === "[DONE]") break;
-
+    const decoder = new TextDecoder();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunks = decoder.decode(value).split("\n");
+      for (const line of chunks) {
+        if (line.startsWith("data: ")) {
+          const data = line.slice(6);
+          if (data === "[DONE]") continue;
           try {
             const json = JSON.parse(data);
-            const token = json.choices?.[0]?.delta?.content || "";
-            aiMsg.content += token;
+            const t = json.choices[0].delta.content || "";
+            aiMsg.content += t;
             bubble.innerHTML = marked.parse(aiMsg.content);
             $("messages").scrollTop = $("messages").scrollHeight;
-          } catch {}
+          } catch(e) {}
         }
       }
     }
-
-  } catch (err){
-    bubble.innerHTML = "Error: " + err.message;
-  }
-
-  if (chat.messages.length === 1) {
-    chat.title = text.slice(0, 20);
-  }
-
-  saveChats();
+  } catch (e) { bubble.innerText = "Error!"; }
+  save();
+  renderChats();
 }
 
-function saveChats(){
-  localStorage.setItem("chats", JSON.stringify(chats));
-  localStorage.setItem("currentChatId", currentChatId);
-}
+// Logic to handle input focus and enter key
+$("input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        send();
+    }
+});
 
-// Init done
-$("loading").style.display = "none";
+$("openSidebar").onclick = () => {
+    $("sidebar").classList.remove("-translate-x-[110%]");
+    $("overlay").classList.remove("hidden");
+};
+$("overlay").onclick = () => {
+    $("sidebar").classList.add("-translate-x-[110%]");
+    $("overlay").classList.add("hidden");
+};
+$("newChat").onclick = createChat;
+$("send").onclick = send;
+$("settingsBtn").onclick = () => {
+  $("apiKey").value = localStorage.getItem("apiKey") || "";
+  $("model").value = localStorage.getItem("model") || "deepseek/deepseek-r1:free";
+  $("settingsModal").classList.remove("hidden");
+};
+$("closeSettings").onclick = () => $("settingsModal").classList.add("hidden");
+$("saveSettings").onclick = () => {
+  localStorage.setItem("apiKey", $("apiKey").value);
+  localStorage.setItem("model", $("model").value);
+  $("settingsModal").classList.add("hidden");
+};
+
+// Bootstrap
+if (chats.length === 0) createChat();
+renderChats();
+loadChat();
+$("loading").classList.add("hidden");
 $("app").classList.remove("hidden");
-
 })();
 </script>
-
 </body>
-  </html>
+</html>
